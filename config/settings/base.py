@@ -141,3 +141,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Register custom user model
 AUTH_USER_MODEL = 'accounts.User'
+
+# REST_FRAMEWORK settings
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'core.utils.renders.CustomRender',
+    ]
+}
