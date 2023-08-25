@@ -1,6 +1,6 @@
-from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
-from django.core.validators import RegexValidator, MinLengthValidator, MaxLengthValidator
+from django.core.exceptions import ValidationError
+from django.core.validators import MinLengthValidator, MaxLengthValidator
 from django.db import models
 
 
@@ -8,6 +8,9 @@ class UserManager(BaseUserManager):
     def create_user(self, phone, password=None, **extra_fields):
         if not phone:
             raise ValueError('The Phone field must be set')
+
+        if '-' in phone:
+            raise ValidationError('전화번호에는 - 기호를 포함하지 않아야 합니다.')
 
         if self.filter(phone=phone).exists():
             raise ValueError('A user with this phone number already exists')
