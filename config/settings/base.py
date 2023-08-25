@@ -26,7 +26,8 @@ ALLOWED_HOSTS = ['*']
 
 # Application definition
 PROJECT_APPS = [
-
+    'accounts.apps.AccountsConfig',
+    'shops.apps.ShopsConfig',
 ]
 
 THIRD_PARTY_APPS = [
