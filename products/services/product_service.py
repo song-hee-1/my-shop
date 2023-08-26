@@ -1,8 +1,8 @@
 from accounts.models import User
 from core.utils.base_service import BaseService
 from core.utils.paginate import CursorPagination
-from products.models import Product
-from products.serializers.product_serializer import ProductListQsProductSerializer
+from products.models import Product, ProductStatusType
+from products.serializers.product_serializer import ProductListQsProductSerializer, ProductRetrieveQsProductSerializer
 
 
 class ProductService(BaseService):
@@ -12,7 +12,7 @@ class ProductService(BaseService):
 
     def list(self, request):
         products = Product.objects.filter(
-           user=self.user
+           user=self.user, status=ProductStatusType.REGISTERED.value
         )
         pagination = CursorPagination()
         paginated_products = pagination.paginate_queryset(products, request)
@@ -26,6 +26,25 @@ class ProductService(BaseService):
         }
 
         return pagination_data
+
+    def retrieve(self, id):
+        try:
+            product = Product.objects.get(id=id)
+        except Product.DoesNotExist:
+            raise Exception('ProductService.retrieve: Product does not exist')
+
+        if product.user != self.user:
+            raise Exception('ProductService.retrieve: No Permission')
+
+        product = Product.objects.filter(
+            id=id,
+            status=ProductStatusType.REGISTERED.value
+        ).prefetch_related(
+            'categories'
+        )
+
+        serializer = ProductRetrieveQsProductSerializer(product, many=True)
+        return serializer.data
 
     @property
     def user(self) -> User:

@@ -16,4 +16,10 @@ class ProductViewSet(viewsets.GenericViewSet):
         output_dto = service.list(request)
         return Response(output_dto)
 
+    def retrieve(self, request: Request, pk):
+        id = int(pk)
+        service = ProductService(user=request.user)
+        output_dto = service.retrieve(id=id)
+        return Response(output_dto)
+
 
