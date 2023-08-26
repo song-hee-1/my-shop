@@ -46,6 +46,18 @@ class ProductService(BaseService):
         serializer = ProductRetrieveQsProductSerializer(product, many=True)
         return serializer.data
 
+    def delete(self, id):
+        try:
+            product = Product.objects.get(id=id)
+        except Product.DoesNotExist:
+            raise Exception('ProductService.retrieve: Product does not exist')
+
+        if product.user != self.user:
+            raise Exception('ProductService.retrieve: No Permission')
+
+        product.status = ProductStatusType.DELETED.value
+        product.save()
+
     @property
     def user(self) -> User:
         return self._user

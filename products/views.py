@@ -22,4 +22,9 @@ class ProductViewSet(viewsets.GenericViewSet):
         output_dto = service.retrieve(id=id)
         return Response(output_dto)
 
+    def delete(self, request: Request, pk):
+        id = int(pk)
+        service = ProductService(user=request.user)
+        output_dto = service.delete(id=id)
+        return Response(output_dto)
 
