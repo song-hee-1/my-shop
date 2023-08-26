@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
 
@@ -9,6 +10,7 @@ from products.services.product_service import ProductService
 
 class ProductViewSet(viewsets.GenericViewSet):
     serializer_class = ProductListQsProductSerializer
+    permission_classes = [IsAuthenticated]
 
     def create(self, request: Request):
         serializer = ProductCreatePostSerializer(data=request.data)
