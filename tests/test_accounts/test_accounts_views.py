@@ -1,5 +1,6 @@
 import pytest
 from django.urls import reverse
+from rest_framework import status
 
 
 @pytest.mark.django_db
@@ -10,7 +11,7 @@ def test_success_signup(api_client, test_phone, test_password):
         'password': test_password,
     }
     response = api_client.post(url, data)
-    assert response.status_code == 200
+    assert response.status_code == status.HTTP_200_OK
 
 
 @pytest.mark.django_db
@@ -32,7 +33,8 @@ def test_fail_signup_max_phone(api_client, test_password):
         'password': test_password,
     }
     response = api_client.post(url, data)
-    assert response.status_code != 200
+    assert response.status_code != status.HTTP_200_OK
+
 
 
 @pytest.mark.django_db
@@ -44,11 +46,11 @@ def test_success_login(create_user, test_phone, test_password, api_client):
         'password': test_password
     }
     response = api_client.post(url, data)
-    assert response.status_code == 200
+    assert response.status_code == status.HTTP_200_OK
 
 
 @pytest.mark.django_db
 def test_success_logout(api_client_with_credentials):
     url = reverse('accounts:accounts:user-logout')
     response = api_client_with_credentials.post(url)
-    assert response.status_code == 200
+    assert response.status_code == status.HTTP_200_OK
