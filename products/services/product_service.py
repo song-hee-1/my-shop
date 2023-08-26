@@ -1,8 +1,9 @@
 from accounts.models import User
 from core.utils.base_service import BaseService
 from core.utils.paginate import CursorPagination
-from products.models import Product, ProductStatusType
-from products.serializers.product_serializer import ProductListQsProductSerializer, ProductRetrieveQsProductSerializer
+from products.models import Product, ProductStatusType, ProductCategory
+from products.serializers.product_serializer import ProductListQsProductSerializer, ProductRetrieveQsProductSerializer, \
+    ProductUpdatePostSerializer
 
 
 class ProductService(BaseService):
@@ -41,9 +42,9 @@ class ProductService(BaseService):
             status=ProductStatusType.REGISTERED.value
         ).prefetch_related(
             'categories'
-        )
+        ).first()
 
-        serializer = ProductRetrieveQsProductSerializer(product, many=True)
+        serializer = ProductRetrieveQsProductSerializer(product)
         return serializer.data
 
     def delete(self, id):
@@ -57,6 +58,35 @@ class ProductService(BaseService):
 
         product.status = ProductStatusType.DELETED.value
         product.save()
+
+    def update(self, id, data):
+        try:
+            product = Product.objects.get(id=id)
+        except Product.DoesNotExist:
+            raise Exception('ProductService.retrieve: Product does not exist')
+
+        if product.user != self.user:
+            raise Exception('ProductService.retrieve: No Permission')
+
+        fields_to_update = [
+            'price', 'origin_price', 'name', 'description', 'barcode',
+            'expired_date', 'size', 'status'
+        ]
+
+        for field in fields_to_update:
+            if field in data:
+                setattr(product, field, data[field])
+
+        product.save()
+
+        categories_data = data.pop('categories', [])
+        product.categories.clear()
+
+        for category_data in categories_data:
+            category_instance, _ = ProductCategory.objects.get_or_create(**category_data)
+            product.categories.add(category_instance)
+
+        return ProductUpdatePostSerializer(product).data
 
     @property
     def user(self) -> User:

@@ -3,7 +3,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 
 from products.models import Product
-from products.serializers.product_serializer import ProductListQsProductSerializer
+from products.serializers.product_serializer import ProductListQsProductSerializer, ProductUpdatePostSerializer
 from products.services.product_service import ProductService
 
 
@@ -28,3 +28,10 @@ class ProductViewSet(viewsets.GenericViewSet):
         output_dto = service.delete(id=id)
         return Response(output_dto)
 
+    def update(self, request: Request, pk):
+        id = int(pk)
+        serializer = ProductUpdatePostSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        service = ProductService(user=request.user)
+        output_dto = service.update(id=id, data=serializer.validated_data)
+        return Response(output_dto)
