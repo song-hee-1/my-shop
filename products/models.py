@@ -23,6 +23,7 @@ class Product(TimeStampModel):
     price = models.PositiveIntegerField(help_text='가격')
     origin_price = models.PositiveIntegerField(help_text='원가')
     name = models.CharField(max_length=255, help_text='이름')
+    name_initials = models.CharField(max_length=255, null=True, help_text='이름의 초성')
     description = models.TextField(help_text='설명')
     barcode = models.CharField(max_length=100, help_text='바코드')
     expired_date = models.DateField(help_text='유통 기한')

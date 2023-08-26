@@ -1,5 +1,8 @@
+from django.db.models import Q
+
 from accounts.models import User
 from core.utils.base_service import BaseService
+from core.utils.initials import get_initials
 from core.utils.paginate import CursorPagination
 from products.models import Product, ProductStatusType, ProductCategory
 from products.serializers.product_serializer import ProductListQsProductSerializer, ProductRetrieveQsProductSerializer, \
@@ -29,11 +32,12 @@ class ProductService(BaseService):
         return pagination_data
 
     def create(self, data):
+        data['name_initials'] = get_initials(data['name'])
         categories_data = data.pop('categories')
         product = Product.objects.create(**data, user=self.user)
 
         for category_data in categories_data:
-            category_instance, _ = ProductCategory.objects.get_or_create(**category_data)
+            category_instance, created = ProductCategory.objects.get_or_create(**category_data)
             product.categories.add(category_instance)
 
         serializer = ProductRetrieveQsProductSerializer(product)
@@ -99,6 +103,18 @@ class ProductService(BaseService):
 
         return ProductUpdatePostSerializer(product).data
 
+    def search(self, keyword):
+        keyword_initials = get_initials(keyword)
+        products = Product.objects.filter(
+            Q(status=ProductStatusType.REGISTERED.value) &
+            Q(name__icontains=keyword) | Q(name_initials__icontains=keyword_initials)
+        )
+
+        serializer = ProductListQsProductSerializer(products, many=True)
+        return serializer.data
+
+
     @property
     def user(self) -> User:
         return self._user
+

@@ -37,10 +37,12 @@ class ProductUpdatePostSerializer(serializers.Serializer):
     categories = ProductCategoryUpdatePostSerializer(many=True, required=False)
 
 
-class ProductCategoryCreatePostSerializer(serializers.ModelSerializer):
+class ProductCategoryCreatePostSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=40)
+    code = serializers.IntegerField()
+
     class Meta:
-        model = ProductCategory
-        exclude = ('id', 'product')
+        fields = ('name', 'code',)
 
 
 class ProductCreatePostSerializer(ProductSerializer):
