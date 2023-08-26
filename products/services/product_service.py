@@ -28,6 +28,17 @@ class ProductService(BaseService):
 
         return pagination_data
 
+    def create(self, data):
+        categories_data = data.pop('categories')
+        product = Product.objects.create(**data, user=self.user)
+
+        for category_data in categories_data:
+            category_instance, _ = ProductCategory.objects.get_or_create(**category_data)
+            product.categories.add(category_instance)
+
+        serializer = ProductRetrieveQsProductSerializer(product)
+        return serializer.data
+
     def retrieve(self, id):
         try:
             product = Product.objects.get(id=id)

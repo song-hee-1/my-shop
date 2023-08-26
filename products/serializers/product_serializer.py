@@ -35,3 +35,19 @@ class ProductUpdatePostSerializer(serializers.Serializer):
     size = serializers.ChoiceField(choices=get_choices(ProductSizeType), required=False)
     status = serializers.ChoiceField(choices=get_choices(ProductStatusType), required=False)
     categories = ProductCategoryUpdatePostSerializer(many=True, required=False)
+
+
+class ProductCategoryCreatePostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductCategory
+        exclude = ('id', 'product')
+
+
+class ProductCreatePostSerializer(ProductSerializer):
+    categories = ProductCategoryCreatePostSerializer(many=True)
+
+    class Meta:
+        model = Product
+        fields = (*ProductSerializer.Meta.fields, 'categories',)
+
+
