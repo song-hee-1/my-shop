@@ -159,3 +159,7 @@ SIMPLE_JWT = {
     'USER_ID_FIELD': 'phone',
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.SlidingToken',)
 }
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
