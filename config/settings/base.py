@@ -34,6 +34,7 @@ THIRD_PARTY_APPS = [
     'debug_toolbar',
     'corsheaders',
     'django_extensions',
+    'drf_spectacular',
 ]
 
 DJANGO_APPS = [
@@ -143,6 +144,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 SIMPLE_JWT = {
@@ -157,3 +159,10 @@ SIMPLE_JWT = {
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': '☕️ API 문서 ',
+    'DESCRIPTION': 'made by song-hee-1',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
