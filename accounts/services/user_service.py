@@ -3,6 +3,7 @@ from rest_framework_simplejwt.tokens import SlidingToken
 
 from accounts.models import User
 from core.utils.base_service import BaseService
+from core.utils.exception import AlreadyExists
 
 
 class UserService(BaseService):
@@ -22,10 +23,9 @@ class UserService(BaseService):
         return jwt_token_output_dto
 
     def signup(self, phone, password):
-        # todo. exception 처리
-        # output_dto = self.check_available_phone(phone)
-        # if output_dto.get('exists'):
-        #     return JsonResponse({'error': '중복된 번호입니다'}, status=400)
+        output_dto = self.check_available_phone(phone)
+        if output_dto.get('exists'):
+            raise AlreadyExists()
         user = User.objects.create_user(phone=phone, password=password)
         jwt_token = SlidingToken.for_user(user)
         jwt_token_output_dto = dict(
