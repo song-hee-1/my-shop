@@ -35,11 +35,11 @@
 ### 데이터베이스 모델링
 ##### 전체(시스템 포함) 
 
-![my_project_visualized](https://github.com/song-hee-1/my-shop/assets/83492367/86ab93fe-f5cd-40b3-9431-328454453ff4)
+![my_project_visualized](https://github.com/song-hee-1/my-shop/assets/83492367/20716d88-70dd-4543-ba52-a51af144352c)
 
 
 ##### 앱(시스템 제외)
-![models](https://github.com/song-hee-1/my-shop/assets/83492367/66da6ab9-c71c-4bd9-9771-272f876c70d5)
+![models](https://github.com/song-hee-1/my-shop/assets/83492367/84c86083-5cf5-4a84-9c86-6d319d74f9bd)
 
 
 - 데이터의 추적성 및 관리를 위하여 `created_at`, `updated_at` 을 가지고 있는 `core` 앱에 TimeStampModel을 모듈화
@@ -55,7 +55,7 @@
 
 - Custom Render를 설정하여 api response의 구조 통일
 	-  `` { "meta":{ "code": 400, "message":"잘못된 상품 사이즈 입니다." }, "data":null }`` 
-	 ![image](https://github.com/song-hee-1/my-shop/assets/83492367/9bdaca1e-6061-47a3-94db-541a29198606)
+	 ![F7FD2D65-2088-484F-82D0-BC6D94BE6745_1_201_a](https://github.com/song-hee-1/my-shop/assets/83492367/18ad6187-f98b-4b16-91f3-52660b60479c)
 
 -  core.utils.exception에 APIException 유틸화하여 관리
 
